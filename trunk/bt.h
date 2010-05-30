@@ -35,7 +35,7 @@ short create_tree();
 short getpage();
 short getroot();
 insert (short rrn, char key, short *promo_r_child, char *promo_key);
-ins_in_page(char key, short *promo_r_child, BTPAGE *p_page);
+ins_in_page(char key, short r_child, BTPAGE *p_page);
 pageinit(BTPAGE *p_page);
 putroot(short root);
 search_node(char key, BTPAGE *p_page, short *pos);

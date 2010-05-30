@@ -7,10 +7,10 @@
                     key's correct position in pos.
    ins_in_page() -- insert key and right child in page
 */
-#iclude "bt.h"
+#include "bt.h"
 
 create_root(char key, short left, short right) {
-           BTPÁGE page;
+           BTPAGE page;
            short rrn;
            rrn = getpage();
            pageinit(&page);
