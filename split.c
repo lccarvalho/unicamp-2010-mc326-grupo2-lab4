@@ -12,7 +12,7 @@
               p_oldpage          pointer to old page structure
               p_newpage          pointer to new page structure                       
 */
-#iclude "bt.h"
+#include "bt.h"
 
 split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
                                  short *promo_r_child, BTPAGE *p_newpage) {
@@ -49,4 +49,5 @@ split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
       p_newpage->child[MINKEYS] = workch[i+1+MINKEYS];
       p_newpage->keycount = MAXKEYS - MINKEYS;
       p_oldpage->keycount = MINKEYS;      
-      *prom_key = workkeys[MINKEYS];                  /* promote middle key   */
+      *promo_key = workkeys[MINKEYS];                  /* promote middle key   */
+}

@@ -17,7 +17,8 @@
 int btfd;           /* global file descriptor for "btree.dat"                 */
 
 btopen() {
-      btfd = open(("btree.dat", O_RDWR);
+//      btfd = open("btree.dat", O_RDWR);
+      btfd = fopen("btree.dat", "r+");  
       return (btfd > 0);
 }
 
@@ -49,7 +50,7 @@ short create_tree() {
       close(btfd);                     /* Have to close and reopen to insure  */
       btopen();                        /* read/write access on many systems   */
       key = getchar();                 /* gGet first key                      */
-      return(create_root(key, NIL, NIL);
+      return(create_root(key, NIL, NIL));
 }
 
 short getpage() {
@@ -69,7 +70,7 @@ btwrite(short rrn, BTPAGE *page_ptr) {
       long lseek(), addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       lseek(btfd, addr, 0);
-      return (write(btfd, poage_ptr, PAGESIZE);
+      return (write(btfd, page_ptr, PAGESIZE));
 }
 
 
