@@ -17,7 +17,7 @@
 FILE* btfd;           /* global file descriptor for "btree.dat"               */
 
 btopen() {
-      btfd = fopen("btree.dat", "w+");  
+      btfd = fopen("btree.dat", "r+");  
       return (btfd != NULL);  
 }
 
@@ -27,10 +27,9 @@ fclose(btfd);
 
 short getroot() {
       short root;
-      long lseek();
       
-      lseek(btfd, 0L, 0);
-      if(read(btfd, &root, 2) == 0){ 
+      fseek(btfd, 0L, SEEK_SET);
+      if(fread(&root,1,sizeof(short),btfd) == 0){ 
             printf("Error: Unable to get root.\007\n");
             exit(1);
       }
