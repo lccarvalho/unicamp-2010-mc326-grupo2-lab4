@@ -14,18 +14,14 @@
 #include "bt.h"
 #include "fileio.h"
 
-//int btfd;           /* global file descriptor for "btree.dat"                 */
-FILE* btfd;
+FILE* btfd;           /* global file descriptor for "btree.dat"               */
 
 btopen() {
-//      btfd = open("btree.dat", O_RDWR);
       btfd = fopen("btree.dat", "w+");  
-//      return (btfd > 0);
       return (btfd != NULL);  
 }
 
-btclose() {
-//      close(btfd);
+void btclose() {
 fclose(btfd);
 }
 
@@ -41,7 +37,7 @@ short getroot() {
       return (root);
 }
 
-putroot(short root) {
+void putroot(short root) {
       fseek(btfd, 0L, SEEK_SET);
       fwrite(&root,1,sizeof(short),btfd);
       fflush(btfd);      
@@ -50,32 +46,27 @@ putroot(short root) {
 short create_tree() {
       char key;
       
-//      btfd = creat("btree.dat", PMODE);
-//      close(btfd);                     /* Have to close and reopen to insure  */
-//      btopen();                        /* read/write access on many systems   */
-btfd = fopen("btree.dat", "w+t");
-      key = getchar();                 /* gGet first key                      */
+      btfd = fopen("btree.dat", "w+t");
+      key = getchar();                 /* Get first key                      */
       return(create_root(key, NIL, NIL));
 }
 
 short getpage() {
       long  addr;
       fseek(btfd, 0, SEEK_END);
-      
       addr = ftell(btfd) - 2L;
-printf("addr: %d  PAGESIZE: %d\n", addr, PAGESIZE);
-      
       return ((short) addr / (short) PAGESIZE);
 }
 
-btread(short rrn, BTPAGE *page_ptr) {
+void btread(short rrn, BTPAGE *page_ptr) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
       fread(page_ptr, 1, PAGESIZE, btfd);
+      fflush(stdin);      
 }
 
-btwrite(short rrn, BTPAGE *page_ptr) {
+void btwrite(short rrn, BTPAGE *page_ptr) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
@@ -83,8 +74,3 @@ btwrite(short rrn, BTPAGE *page_ptr) {
       fflush(btfd);
       return;
 }
-
-
-      
-      
-      

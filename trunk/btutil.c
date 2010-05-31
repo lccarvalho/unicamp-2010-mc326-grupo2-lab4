@@ -9,12 +9,10 @@
 */
 #include "bt.h"
 
-create_root(char key, short left, short right) {
+short create_root(char key, short left, short right) {
            BTPAGE page;
            short rrn;
            rrn = getpage();
-printf("rrn in create_root: %d\n", rrn);
-fflush(stdin);
            pageinit(&page);
            page.key[0] = key;
            page.child[0] = left;
@@ -25,7 +23,7 @@ fflush(stdin);
            return (rrn);
 }
 
-pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
+void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
            int j;
            for(j = 0; j < MAXKEYS; j++) {
                  p_page->key[j] = NOKEY;
@@ -34,7 +32,7 @@ pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
            p_page->child[j] = NIL;      
 }
 
-search_node(char key, BTPAGE *p_page, short *pos) {
+int search_node(char key, BTPAGE *p_page, short *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
@@ -46,7 +44,7 @@ search_node(char key, BTPAGE *p_page, short *pos) {
            else return (NO);          /* key in not in the page */
 }
 
-ins_in_page(char key, short r_child, BTPAGE *p_page) {
+void ins_in_page(char key, short r_child, BTPAGE *p_page) {
            int i;
            for(i = p_page->keycount; key < p_page->key[i-1] && i > 0; i--){
                  p_page->key[i] = p_page->key[i-1];

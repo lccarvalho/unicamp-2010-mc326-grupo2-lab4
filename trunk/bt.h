@@ -21,24 +21,24 @@ typedef struct {
 
 #define PAGESIZE sizeof(BTPAGE)
 
+
 extern short root;                 /* RRN of root page                        */
-//extern int btfd;                   /* file descriptor of btree file           */
-FILE* btfd;
+extern FILE* btfd;                 /* file descriptor of btree file           */
 extern int infd;                   /* file descriptor of input file           */
 
 /* prototypes */
-btclose();
-btopen();
-btread(short rrn, BTPAGE *page_ptr);
-btwrite(short rrn, BTPAGE *page_ptr);
-create_root(char key, short left, short right);
+void btclose(void);
+int btopen(void);
+void btread(short rrn, BTPAGE *page_ptr);
+void btwrite(short rrn, BTPAGE *page_ptr);
+short create_root(char key, short left, short right);
 short create_tree();
 short getpage();
 short getroot();
-insert (short rrn, char key, short *promo_r_child, char *promo_key);
-ins_in_page(char key, short r_child, BTPAGE *p_page);
-pageinit(BTPAGE *p_page);
-putroot(short root);
-search_node(char key, BTPAGE *p_page, short *pos);
-split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
+int insert(short rrn, char key, short *promo_r_child, char *promo_key);
+void ins_in_page(char key, short r_child, BTPAGE *p_page);
+void pageinit(BTPAGE *p_page);
+void putroot(short root);
+int search_node(char key, BTPAGE *p_page, short *pos);
+void split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
                                short *promo_r_child, BTPAGE *p_newpage);
