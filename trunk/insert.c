@@ -30,6 +30,10 @@ insert(short rrn, char key, short *promo_r_child, char *promo_key) {
                     return (YES);
              }
              btread(rrn, &page);
+             
+printf("1a chave da pagina lida em insert: %c\n", page.key[0]); 
+fflush(stdin);            
+             
              found = search_node(key, &page, &pos);
              if(found) {
                  printf("Error: attempt to insert duplicate key:%c\n\007", key);

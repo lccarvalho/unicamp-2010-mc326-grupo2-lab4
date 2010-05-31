@@ -13,6 +13,8 @@ create_root(char key, short left, short right) {
            BTPAGE page;
            short rrn;
            rrn = getpage();
+printf("rrn in create_root: %d\n", rrn);
+fflush(stdin);
            pageinit(&page);
            page.key[0] = key;
            page.child[0] = left;
