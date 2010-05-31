@@ -24,7 +24,7 @@ main() {
 //}
 //       else                       /* if btree.dat not there, create it        */
              root = create_tree();                     
-printf("root in main: %d\n", root);        
+//printf("root in main: %d\n", root);        
        while((key = getchar()) != 'q') {
              promoted = insert(root, key, &promo_rrn, &promo_key);
              if(promoted)

@@ -14,7 +14,7 @@
 */
 #include "bt.h"
 
-split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
+void split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
                                  short *promo_r_child, BTPAGE *p_newpage) {
 
       int i;
