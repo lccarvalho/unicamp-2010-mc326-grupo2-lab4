@@ -22,7 +22,8 @@ typedef struct {
 #define PAGESIZE sizeof(BTPAGE)
 
 extern short root;                 /* RRN of root page                        */
-extern int btfd;                   /* file descriptor of btree file           */
+//extern int btfd;                   /* file descriptor of btree file           */
+FILE* btfd;
 extern int infd;                   /* file descriptor of input file           */
 
 /* prototypes */

@@ -14,16 +14,19 @@
 #include "bt.h"
 #include "fileio.h"
 
-int btfd;           /* global file descriptor for "btree.dat"                 */
+//int btfd;           /* global file descriptor for "btree.dat"                 */
+FILE* btfd;
 
 btopen() {
 //      btfd = open("btree.dat", O_RDWR);
-      btfd = fopen("btree.dat", "r+");  
-      return (btfd > 0);
+      btfd = fopen("btree.dat", "w+");  
+//      return (btfd > 0);
+      return (btfd != NULL);  
 }
 
 btclose() {
-      close(btfd);
+//      close(btfd);
+fclose(btfd);
 }
 
 short getroot() {
@@ -32,45 +35,53 @@ short getroot() {
       
       lseek(btfd, 0L, 0);
       if(read(btfd, &root, 2) == 0){ 
-            printf("Error: Uniable to get root.\007\n");
+            printf("Error: Unable to get root.\007\n");
             exit(1);
       }
       return (root);
 }
 
 putroot(short root) {
-      lseek(btfd, 0L, 0);
-      write(btfd, &root, 2);
+      fseek(btfd, 0L, SEEK_SET);
+      fwrite(&root,1,sizeof(short),btfd);
+      fflush(btfd);      
 }        
 
 short create_tree() {
       char key;
       
-      btfd = creat("btree.dat", PMODE);
-      close(btfd);                     /* Have to close and reopen to insure  */
-      btopen();                        /* read/write access on many systems   */
+//      btfd = creat("btree.dat", PMODE);
+//      close(btfd);                     /* Have to close and reopen to insure  */
+//      btopen();                        /* read/write access on many systems   */
+btfd = fopen("btree.dat", "w+t");
       key = getchar();                 /* gGet first key                      */
       return(create_root(key, NIL, NIL));
 }
 
 short getpage() {
-      long lssek(), addr;
-      addr = lseek(btfd, 0L, 2) - 2L;
-      return ((short) addr / PAGESIZE);
+      long  addr;
+      fseek(btfd, 0, SEEK_END);
+      
+      addr = ftell(btfd) - 2L;
+printf("addr: %d  PAGESIZE: %d\n", addr, PAGESIZE);
+      
+      return ((short) addr / (short) PAGESIZE);
 }
 
 btread(short rrn, BTPAGE *page_ptr) {
-      long lseek(), addr;
+      long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
-      lseek(btfd, addr, 0);
-      return (read(btfd, page_ptr, PAGESIZE));
+      fseek(btfd, addr, SEEK_SET);
+      fread(page_ptr, 1, PAGESIZE, btfd);
 }
 
 btwrite(short rrn, BTPAGE *page_ptr) {
-      long lseek(), addr;
+      long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
-      lseek(btfd, addr, 0);
-      return (write(btfd, page_ptr, PAGESIZE));
+      fseek(btfd, addr, SEEK_SET);
+      fwrite(page_ptr, 1, PAGESIZE, btfd);
+      fflush(btfd);
+      return;
 }
 
 
