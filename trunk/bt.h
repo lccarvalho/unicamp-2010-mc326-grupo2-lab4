@@ -14,8 +14,13 @@
 //typedef enum (false, true) Boolean;
 
 typedef struct {
+        char vrChave[6];
+        int  RRNrecord;
+} CHAVE;
+
+typedef struct {
         short keycount;             /* number of keys in page                 */
-        char  key[MAXKEYS];         /* the actual keys                        */
+        CHAVE  key[MAXKEYS];         /* the actual keys                        */
         short child[MAXKEYS+1];     /* ptrs to RRNs of descendants            */
 } BTPAGE;
 
