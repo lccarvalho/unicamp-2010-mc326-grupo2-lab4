@@ -1,17 +1,22 @@
-/* btutil.c...
-   Contains utility functions for btree program:
-            
-   create_root() -- get and initialize root node and insert one key
-   pageinit()    -- put NOKEY in all "key" slots and NIL in "child" slots
-   search_node() -- return YES if key in node, else NO. In either case, put
-                    key's correct position in pos.
-   ins_in_page() -- insert key and right child in page
-*/
-#include "bt.h"
+/******************************************************************************/
+/* Grupo 2:                                                                   */
+/*          Felipe Augusto da Silva    RA 096993                              */
+/*          Lucas Barbi Rezende        RA 097042                              */
+/*          Luiz Claudio Carvalho      RA 800578                              */
+/*                                                                            */
+/* MC236EF  1o semestre 2010                                           UNICAMP*/
+/* Laboratório 04 - B-Tree
+   
+/******************************************************************************/
 
-short create_root(char key, short left, short right) {
+
+
+#include "btree.h"
+
+
+int create_root(char key, int left, int right) {
            BTPAGE page;
-           short rrn;
+           int rrn;
            rrn = getpage();
            pageinit(&page);
            page.key[0] = key;
@@ -32,7 +37,7 @@ void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
            p_page->child[j] = NIL;      
 }
 
-int search_node(char key, BTPAGE *p_page, short *pos) {
+Boolean search_node(char key, BTPAGE *p_page, int *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
@@ -40,11 +45,11 @@ int search_node(char key, BTPAGE *p_page, short *pos) {
            *pos = i;
            
            if(*pos < p_page->keycount && key == p_page->key[*pos])
-                   return (YES);      /* key in in the page */
-           else return (NO);          /* key in not in the page */
+                   return true;      /* key in in the page */
+           else return false;          /* key in not in the page */
 }
 
-void ins_in_page(char key, short r_child, BTPAGE *p_page) {
+void ins_in_page(char key, int r_child, BTPAGE *p_page) {
            int i;
            for(i = p_page->keycount; key < p_page->key[i-1] && i > 0; i--){
                  p_page->key[i] = p_page->key[i-1];

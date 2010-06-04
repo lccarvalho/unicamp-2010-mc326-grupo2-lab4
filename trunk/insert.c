@@ -1,3 +1,14 @@
+/******************************************************************************/
+/* Grupo 2:                                                                   */
+/*          Felipe Augusto da Silva    RA 096993                              */
+/*          Lucas Barbi Rezende        RA 097042                              */
+/*          Luiz Claudio Carvalho      RA 800578                              */
+/*                                                                            */
+/* MC236EF  1o semestre 2010                                           UNICAMP*/
+/* Laboratório 04 - B-Tree
+   
+/******************************************************************************/
+
 /*insert.c...
              Contains insert() function to insert a key to a btree.
      Calls itself recursively until bottom of tree is reached.
@@ -6,7 +17,8 @@
         - calls split() to split the node
         - promotes middle key and rrn of new node
 */        
-#include "bt.h"
+
+#include "btree.h"
 
 /* insert()...
 Arguments:
@@ -16,18 +28,18 @@ Arguments:
           *promo_key:         key promoted up from here to next level
 */
 
-int insert(short rrn, char key, short *promo_r_child, char *promo_key) {
+int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
              BTPAGE page,           /* current page                           */
                     newpage;        /* new page created if split occurs       */
              int found, promoted;   /* boolean values                         */
-             short pos,
+             int pos,
                    p_b_rrn;         /* rrn promoted from below                */
              char  p_b_key;         /* key promoted from below                */
              
              if(rrn == NIL) {             /* past bottom of tree... "promote" */
                     *promo_key = key;     /* original key so that it will be  */
                     *promo_r_child = NIL; /* inserted at leaf level           */
-                    return (YES);
+                    return true;
              }
              btread(rrn, &page);
              found = search_node(key, &page, &pos);
@@ -41,13 +53,13 @@ int insert(short rrn, char key, short *promo_r_child, char *promo_key) {
              if(page.keycount < MAXKEYS) {
                  ins_in_page(p_b_key, p_b_rrn, &page);     /*OK to insert key */
                  btwrite(rrn, &page);               /*and pointer in this page*/             
-                 return (NO);                                 /* no promotion */
+                 return false;                                 /* no promotion */
              }
              else {
                  split(p_b_key, p_b_rrn, &page, promo_key, promo_r_child, 
                                                                      &newpage); 
                  btwrite(rrn, &page);
                  btwrite(*promo_r_child, &newpage);
-                 return (YES);                                /* promotion */
+                 return true;                                /* promotion */
              }       
 }
