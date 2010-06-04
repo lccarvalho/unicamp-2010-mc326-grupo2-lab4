@@ -1,63 +1,154 @@
-/* btio.c...
-   Contains btree functions that directly involve file i/o:
+/******************************************************************************/
+/* Grupo 2:                                                                   */
+/*          Felipe Augusto da Silva    RA 096993                              */
+/*          Lucas Barbi Rezende        RA 097042                              */
+/*          Luiz Claudio Carvalho      RA 800578                              */
+/*                                                                            */
+/* MC236EF  1o semestre 2010                                           UNICAMP*/
+/* Laboratório 04 - B-Tree
+   
+/******************************************************************************/
+
+
+
+#include "btree.h"
+
+
+void AbreArquivoDados(char* nome, FILE** arqDados, FILE** arqCfg){
+/* Abre o arquivo de dados e seu respectivo arquivo de configuração (.cfg) */ 
+
+      *arqDados = Fopen(nome, "r");    /* Abre arquivo de dados */
+   
+      /* abre arquivo de configuração (mesmo nome com extensão .cfg) */
+      nome[strlen(nome)-3] = '\0';
+      *arqCfg = Fopen(strcat(nome, "cfg"), "r");
+
+} /* AbreArquivoDados */
+
+
+void CarregaHeader(Header** h, int* numcampos, FILE* arqCfg){
+/* Carrega o vetor head com os campos do banco de dados definido por arqCfg */
+
+    int i, final;
+    char c;
+    
+    fscanf(arqCfg, "%d", numcampos);     /* Le número de campos */
+    fseek(arqCfg, 2, SEEK_CUR);
+    *h = Malloc(sizeof(Header)*(*numcampos));     /* Aloca o vetor head */
+    
+    for(i = 0; i < *numcampos; i++) {
+        
+        /* Le nome */
+        fread((*h+i)->nome, tamPrimCampoHd, 1, arqCfg);
+        (*h+i)->nome[tamPrimCampoHd] = '\0';
+        TiraBrancosDoFinal((*h+i)->nome);
+    
+        /* Le tipo */
+        (*h+i)->tipo = fgetc(arqCfg);
+        
+        /* Le endereço de inicio e final de um campo e calcula seu tamanho */
+        fscanf(arqCfg, "%d %d", &((*h+i)->inicio), &final);
+        (*h+i)->tamanho = final - (*h+i)->inicio + 1;
+        
+        /* Le caractere de obrigatoriedade do campo */
+        fseek(arqCfg, 1, SEEK_CUR);
+        c = fgetc(arqCfg);
+        if(c == 'S')
+            (*h+i)->obrig = true;
+        else
+            (*h+i)->obrig = false;
             
-   btopen()      -- open file "btree.dat" to hold the btree.
-   btclose()     -- close "btree.dat".
-   getroot()     -- get rrn of root node from first two bytes of btree.dat
-   putroot()     -- put rrn of root node in first two bytes of btree.dat
-   create_tree() -- create "btree.dat" and root node
-   getpage()     -- get next available block in "btree.dat" for a new page
-   btread()      -- read page number rrn from "btree.dat"
-   btwrite()     -- write page number rrn to "btree.dat"
-*/
-#include <stdio.h>
-#include "bt.h"
-#include "fileio.h"
+        /* Le mensagem */    
+        fseek(arqCfg, 1, SEEK_CUR);
+        fread((*h+i)->msg, tamUltCampoHd, 1, arqCfg);
+        (*h+i)->msg[tamUltCampoHd] = '\0';
+        TiraBrancosDoFinal((*h+i)->msg);
+    
+        fseek(arqCfg, 2, SEEK_CUR);
+    }
+    
+} /* CarregaHeader */
 
-FILE* btfd;           /* global file descriptor for "btree.dat"               */
 
-btopen() {
-      btfd = fopen("btree.dat", "r+");  
-      return (btfd != NULL);  
-}
+Record LeRegistro(FILE* arq, int n, Header* h) {
+/* Retorna um registro com 'n' campos lido em 'arq'. */
+   
+   int i;
+   Record registro;
+   
+   registro = Malloc(sizeof(char*)*n);
+   
+   for(i=0;i<n;i++){
+                     
+          registro[i] = (char*)Malloc(sizeof(char)*(h[i].tamanho+1));
+          fread(registro[i], h[i].tamanho, 1, arq);
+          registro[i][h[i].tamanho] = '\0';
+   }
+   
+   return registro;
+   
+}/* LeRegistroFixo */
 
-void btclose() {
-fclose(btfd);
-}
 
-short getroot() {
-      short root;
-      
+void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h){
+/* Grava, na posição corrente em arq, os dados de rec. */
+
+   int i;
+   char *linha;
+   
+   /* tamanho de um registro do arquivo de entrada */
+   tamreg = head[numcampos-1].inicio + head[numcampos-1].tamanho;
+   
+   linha = Malloc(sizeof(char)*(tamreg+1));
+   
+   linha[0] = '\0';
+   
+   /* junta todos os campos do registros em um unico bloco de memoria
+      para dar apenas um fwrite */
+   
+   for(i = 0; i < numcampos; i++) {
+         
+         strcat(linha, rec[i]);
+         
+         if((i < numcampos-1) && (h[i+1].inicio > h[i].inicio + h[i].tamanho)) //campos com um '' no final
+             strcat(linha, " ");
+         
+   }
+   
+   strcat(linha, "\n");
+   
+   fwrite(linha, tamreg, 1, arq);
+   
+   free(linha);
+
+} /* ImprimeRegFixo */
+
+
+void LiberaRegistro(Record registro, int n){
+/* Libera todas as strings apontadas por record e também os apontadores */
+     
+     int i;
+     for(i = 0; i < n; i++)
+        free(registro[i]);
+     free(registro);
+     
+} /* LiberaRegistro */
+
+
+void putroot(int root) {
       fseek(btfd, 0L, SEEK_SET);
-      if(fread(&root,1,sizeof(short),btfd) == 0){ 
-            printf("Error: Unable to get root.\007\n");
-            exit(1);
-      }
-      return (root);
-}
-
-void putroot(short root) {
-      fseek(btfd, 0L, SEEK_SET);
-      fwrite(&root,1,sizeof(short),btfd);
+      fwrite(&root,1,sizeof(int),btfd);
       fflush(btfd);      
 }        
 
-short create_tree() {
-      char key;
-      
-      btfd = fopen("btree.dat", "w+t");
-      key = getchar();                 /* Get first key                      */
-      return(create_root(key, NIL, NIL));
-}
-
-short getpage() {
+int getpage() {
       long  addr;
       fseek(btfd, 0, SEEK_END);
       addr = ftell(btfd) - 2L;
-      return ((short) addr / (short) PAGESIZE);
+      return ((int) addr / (int) PAGESIZE);
 }
 
-void btread(short rrn, BTPAGE *page_ptr) {
+void btread(int rrn, BTPAGE *page_ptr) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
@@ -65,7 +156,7 @@ void btread(short rrn, BTPAGE *page_ptr) {
       fflush(stdin);      
 }
 
-void btwrite(short rrn, BTPAGE *page_ptr) {
+void btwrite(int rrn, BTPAGE *page_ptr) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);

@@ -1,3 +1,14 @@
+/******************************************************************************/
+/* Grupo 2:                                                                   */
+/*          Felipe Augusto da Silva    RA 096993                              */
+/*          Lucas Barbi Rezende        RA 097042                              */
+/*          Luiz Claudio Carvalho      RA 800578                              */
+/*                                                                            */
+/* MC236EF  1o semestre 2010                                           UNICAMP*/
+/* Laboratório 04 - B-Tree
+   
+/******************************************************************************/
+
 /* btutil.c...
    Contains split() function for btree program:
             
@@ -12,13 +23,15 @@
               p_oldpage          pointer to old page structure
               p_newpage          pointer to new page structure                       
 */
-#include "bt.h"
 
-void split(char key, short r_child, BTPAGE *p_oldpage, char *promo_key,
-                                 short *promo_r_child, BTPAGE *p_newpage) {
+#include "btree.h"
+
+
+void split(char key, int r_child, BTPAGE *p_oldpage, char *promo_key,
+                                 int *promo_r_child, BTPAGE *p_newpage) {
 
       int i;
-      short mid;                  /* tells where split is to occur            */
+      int mid;                  /* tells where split is to occur            */
       char workkeys[MAXKEYS+1];   /* temporarily holds keys, before split     */
       char workch[MAXKEYS+2];     /* temporarily holds children, before split */
       
