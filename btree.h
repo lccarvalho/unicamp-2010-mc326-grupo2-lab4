@@ -26,7 +26,7 @@
 
 
 /* Definição de tipo booleano */
-typedef enum (false, true) Boolean;
+typedef enum {false, true} Boolean;
 
 
 /* Definição de um vetor de ponteiros para caractere. Uma vez inicializados,
