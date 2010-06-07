@@ -14,7 +14,7 @@
 #include "btree.h"
 
 
-int create_root(char key, int left, int right) {
+int create_root(CHAVE key, int left, int right) {
            BTPAGE page;
            int rrn;
            rrn = getpage();
@@ -30,21 +30,21 @@ int create_root(char key, int left, int right) {
 
 void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
            int j;
-           for(j = 0; j < MAXKEYS; j++) {
-                 p_page->key[j] = NOKEY;
+           for(j = 0; j < MAXORDEM; j++) {
+                 memset (p_page->key[j].vrChave, NOKEY, TAMCHAVE); 
                  p_page->child[j] = NIL;      
            }
            p_page->child[j] = NIL;      
 }
 
-Boolean search_node(char key, BTPAGE *p_page, int *pos) {
+Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
-           for(i=0; i < p_page->keycount && key > p_page->key[i]; i++);
+           for(i=0; i < p_page->keycount && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);         //TROCAR POR STRCOMP/CMP
            *pos = i;
            
-           if(*pos < p_page->keycount && key == p_page->key[*pos])
+           if(*pos < p_page->keycount && key == p_page->key[*pos])              //TROCAR POR STRCOMP/CMP
                    return true;      /* key in in the page */
            else return false;          /* key in not in the page */
 }
