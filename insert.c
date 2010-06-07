@@ -27,8 +27,9 @@ Arguments:
           key:                key to be inserted here or lower
           *promo_key:         key promoted up from here to next level
 */
-
-int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
+Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
+                                          int ordem, Boolean *duplic){
+//int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
              BTPAGE page,           /* current page                           */
                     newpage;        /* new page created if split occurs       */
              int found, promoted;   /* boolean values                         */
@@ -44,20 +45,21 @@ int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
              btread(rrn, &page);
              found = search_node(key, &page, &pos);
              if(found) {
-                 printf("Error: attempt to insert duplicate key:%c\n\007", key);
-                 return (0);
+                 *duplic = true;
+                 return false;
              }
-             promoted = insert(page.child[pos], key, &p_b_rrn, &p_b_key);
+             promoted = insert(page.child[pos], key, &p_b_rrn, &p_b_key,
+                                                               ordem, duplic);
              if(!promoted)
-                 return (NO);                                 /* no promotion */
-             if(page.keycount < MAXKEYS) {
+                 return false;                                 /* no promotion */
+             if(page.keycount < (ordem-1)) {
                  ins_in_page(p_b_key, p_b_rrn, &page);     /*OK to insert key */
                  btwrite(rrn, &page);               /*and pointer in this page*/             
                  return false;                                 /* no promotion */
              }
              else {
                  split(p_b_key, p_b_rrn, &page, promo_key, promo_r_child, 
-                                                                     &newpage); 
+                                                              &newpage, ordem); 
                  btwrite(rrn, &page);
                  btwrite(*promo_r_child, &newpage);
                  return true;                                /* promotion */

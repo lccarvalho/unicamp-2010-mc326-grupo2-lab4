@@ -22,6 +22,8 @@
 #define tamUltCampoHd 40
 #define NIL     -1
 #define NOKEY   '@'
+#define MAXORDEM 10
+#define TAMCHAVE 6
 
 
 
@@ -52,7 +54,7 @@ typedef struct {
 
 /* Estrutura das chaves */
 typedef struct {
-        char vrChave[6];     /* chave */
+        char vrChave[TAMCHAVE];     /* chave */
         int  RRNrecord;      /* RRN do registro no arquivo de dados */
         } CHAVE;
 
@@ -60,8 +62,8 @@ typedef struct {
 /* Estrutura de um nó da Btree */
 typedef struct {
         int keycount;       /* número de chaves no nó */
-        CHAVE  key[9];      /* chaves */
-        int child[10];      /* RRNs dos descendentes */
+        CHAVE  key[MAXORDEM-1];      /* chaves */
+        int child[MAXORDEM];      /* RRNs dos descendentes */
         } BTPAGE;
 
 #define PAGESIZE sizeof(BTPAGE)
@@ -91,7 +93,7 @@ void btread(int rrn, BTPAGE *page_ptr);
 void btwrite(int rrn, BTPAGE *page_ptr);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
-int create_root(char key, int left, int right, int ordem);
+int create_root(CHAVE key, int left, int right, int ordem);
 /* Cria a raiz da Btree, inserindo a chave 'key' */
 
 int getpage();
@@ -100,7 +102,7 @@ int getpage();
 int getroot();
 /* Lê RRN da raiz */
 
-Boolean insert(int rrn, char key, int *promo_r_child, char *promo_key,
+Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
                                           int ordem, Boolean *duplic);
 /* Função para inserir 'key' na Btree. Usa chamadas recursivas até atingir uma
    folha e então insere. Se o nó estiver cheio, chama split() para dividí-lo.
@@ -118,12 +120,12 @@ void pageinit(BTPAGE *p_page);
 void putroot(int root);
 /* Coloca RRN da raiz no inicio do arquivo de índices */
 
-Boolean search_node(char key, BTPAGE *p_page, int *pos);
+Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos);
 /* Retorna true se key está no nó ou false caso contrário. Em qualquer caso
    coloca a posição correta da chave em pos */
 
-void split(char key, int r_child, BTPAGE *p_oldpage, char *promo_key,
-                               int *promo_r_child, BTPAGE *p_newpage);
+void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
+                              int *promo_r_child, BTPAGE *p_newpage, int ordem);
 /* Divide o nó criando um novo nó e passando metade das chaves para o novo nó.
    Promove a chave do meio e o RRN do novo nó. */                       
 

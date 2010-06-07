@@ -48,7 +48,8 @@ int main(int argc, char* argv[]) {
            root,               /* RRN da raiz da Btree */
            numcampos,          /* número de campos de um registro */
            RRN_RegCorrente,    /* RRN do registro no arquivo de dados */
-           promo_rrn;          /* RRN promovido */
+           promo_rrn,          /* RRN promovido */
+           opcao;
        
        Boolean fim = false,      /* flag para loop do menu */
                duplic = false,   /* registro duplicado */
@@ -78,9 +79,9 @@ int main(int argc, char* argv[]) {
        AbreArquivoDados(argv[2], &ArqDados, &ArqCfg);
        
        /* configuração do arquivo de dados */                         
-       CarregaHeader(&head, &numcampos, arqCfg);
+       CarregaHeader(&head, &numcampos, ArqCfg);
     
-       fclose(arqCfg);
+       fclose(ArqCfg);
        
        /* menu do programa */
        do {
@@ -124,7 +125,7 @@ int main(int argc, char* argv[]) {
                   
                   while(!feof(ArqDados)) {
                        
-                       reg = LeRegistroFixo(ArqDados, numcampos, head);
+                       reg = LeRegistro(ArqDados, numcampos, head);
                        
                        /* informações da chave */
                        key.RRNrecord = RRN_RegCorrente;
