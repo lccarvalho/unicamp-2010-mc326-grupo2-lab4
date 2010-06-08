@@ -96,7 +96,7 @@ void btread(int rrn, BTPAGE *page_ptr, FILE* btfd);
 void btwrite(int rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
-int create_root(CHAVE key, int left, int right);
+int create_root(CHAVE key, int left, int right, FILE* btfd);
 /* Cria a raiz da Btree, inserindo a chave 'key' */
 
 int getpage(FILE* btfd);
@@ -106,7 +106,7 @@ int getroot();
 /* Lê RRN da raiz */
 
 Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
-                                          int ordem, Boolean *duplic);
+                                       int ordem, Boolean *duplic, FILE* btfd);
 /* Função para inserir 'key' na Btree. Usa chamadas recursivas até atingir uma
    folha e então insere. Se o nó estiver cheio, chama split() para dividí-lo.
    Se as promoções ocorrerem até a raiz, coloca a chave do meio em 'promo_key'
@@ -128,7 +128,7 @@ Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos);
    coloca a posição correta da chave em pos */
 
 void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
-                              int *promo_r_child, BTPAGE *p_newpage, int ordem);
+                int *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd);
 /* Divide o nó criando um novo nó e passando metade das chaves para o novo nó.
    Promove a chave do meio e o RRN do novo nó. */                       
 

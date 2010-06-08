@@ -27,8 +27,8 @@ Arguments:
           key:                key to be inserted here or lower
           *promo_key:         key promoted up from here to next level
 */
-Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
-                                          int ordem, Boolean *duplic){
+Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE* promo_key,
+                                       int ordem, Boolean *duplic, FILE* btfd){
 //int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
              BTPAGE page,           /* current page                           */
                     newpage;        /* new page created if split occurs       */
@@ -37,31 +37,31 @@ Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
                    p_b_rrn;         /* rrn promoted from below                */
              CHAVE  p_b_key;         /* key promoted from below                */
              
-             if(rrn == NIL) {             /* past bottom of tree... "promote" */
-                    *promo_key = key;     /* original key so that it will be  */
-                    *promo_r_child = NIL; /* inserted at leaf level           */
+             if(rrn == NIL) {                               /* past bottom of tree... "promote" */
+                    memmove(promo_key, &key, sizeof(CHAVE));/* original key so that it will be  */ 
+                    *promo_r_child = NIL;                   /* inserted at leaf level           */
                     return true;
              }
-             btread(rrn, &page);
+             btread(rrn, &page, btfd);
              found = search_node(key, &page, &pos);
              if(found) {
                  *duplic = true;
                  return false;
              }
              promoted = insert(page.child[pos], key, &p_b_rrn, &p_b_key,
-                                                               ordem, duplic);
+                                                           ordem, duplic, btfd);
              if(!promoted)
                  return false;                                 /* no promotion */
              if(page.keycount < (ordem-1)) {
-                 ins_in_page(p_b_key, p_b_rrn, &page);     /*OK to insert key */
-                 btwrite(rrn, &page);               /*and pointer in this page*/             
+                 ins_in_page(p_b_key, p_b_rrn, &page);         /*OK to insert key */
+                 btwrite(rrn, &page, btfd);                    /*and pointer in this page*/             
                  return false;                                 /* no promotion */
              }
              else {
                  split(p_b_key, p_b_rrn, &page, promo_key, promo_r_child, 
-                                                              &newpage, ordem); 
-                 btwrite(rrn, &page);
-                 btwrite(*promo_r_child, &newpage);
+                                                         &newpage, ordem, btfd); 
+                 btwrite(rrn, &page, btfd);
+                 btwrite(*promo_r_child, &newpage, btfd);
                  return true;                                /* promotion */
              }       
 }
