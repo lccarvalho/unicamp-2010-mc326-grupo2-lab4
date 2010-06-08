@@ -169,7 +169,7 @@ int main(int argc, char* argv[]) {
              case 3:
                   fim = true;
              break;
-       
+         } /* switch */
        } while (!fim);
 
 

@@ -35,7 +35,7 @@ Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
              int found, promoted;   /* boolean values                         */
              int pos,
                    p_b_rrn;         /* rrn promoted from below                */
-             char  p_b_key;         /* key promoted from below                */
+             CHAVE  p_b_key;         /* key promoted from below                */
              
              if(rrn == NIL) {             /* past bottom of tree... "promote" */
                     *promo_key = key;     /* original key so that it will be  */

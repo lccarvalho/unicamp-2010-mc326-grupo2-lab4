@@ -26,6 +26,17 @@ void AbreArquivoDados(char* nome, FILE** arqDados, FILE** arqCfg){
 } /* AbreArquivoDados */
 
 
+void TiraBrancosDoFinal(char* s){
+/* Elimina todos os brancos em excesso no final de uma string. */
+    
+    int i = strlen(s) - 1;     //Último elemento da string
+    while(i >= 0 && s[i] == ' ')
+       i--;
+    s[i+1] = '\0';
+    
+} /* TiraBrancosDoFinal */
+
+
 void CarregaHeader(Header** h, int* numcampos, FILE* arqCfg){
 /* Carrega o vetor head com os campos do banco de dados definido por arqCfg */
 
@@ -93,11 +104,11 @@ Record LeRegistro(FILE* arq, int n, Header* h) {
 void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h){
 /* Grava, na posição corrente em arq, os dados de rec. */
 
-   int i;
+   int i, tamreg;
    char *linha;
    
    /* tamanho de um registro do arquivo de entrada */
-   tamreg = head[numcampos-1].inicio + head[numcampos-1].tamanho;
+   tamreg = h[numcampos-1].inicio + h[numcampos-1].tamanho;
    
    linha = Malloc(sizeof(char)*(tamreg+1));
    
@@ -135,20 +146,20 @@ void LiberaRegistro(Record registro, int n){
 } /* LiberaRegistro */
 
 
-void putroot(int root) {
+void putroot(int root, FILE* btfd) {
       fseek(btfd, 0L, SEEK_SET);
       fwrite(&root,1,sizeof(int),btfd);
       fflush(btfd);      
 }        
 
-int getpage() {
+int getpage(FILE* btfd) {
       long  addr;
       fseek(btfd, 0, SEEK_END);
       addr = ftell(btfd) - 2L;
       return ((int) addr / (int) PAGESIZE);
 }
 
-void btread(int rrn, BTPAGE *page_ptr) {
+void btread(int rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
@@ -156,7 +167,7 @@ void btread(int rrn, BTPAGE *page_ptr) {
       fflush(stdin);      
 }
 
-void btwrite(int rrn, BTPAGE *page_ptr) {
+void btwrite(int rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
