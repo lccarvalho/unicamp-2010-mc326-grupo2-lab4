@@ -14,17 +14,17 @@
 #include "btree.h"
 
 
-int create_root(CHAVE key, int left, int right) {
+int create_root(CHAVE key, int left, int right, FILE* btfd) {
            BTPAGE page;
            int rrn;
-           rrn = getpage();
+           rrn = getpage(btfd);
            pageinit(&page);
            page.key[0] = key;
            page.child[0] = left;
            page.child[1] = right;
            page.keycount = 1;
-           btwrite(rrn, &page);
-           putroot(rrn);
+           btwrite(rrn, &page, btfd);
+           putroot(rrn, btfd);
            return (rrn);
 }
 
@@ -44,7 +44,7 @@ Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
            for(i=0; i < p_page->keycount && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);         //TROCAR POR STRCOMP/CMP
            *pos = i;
            
-           if(*pos < p_page->keycount && key.vrChave == p_page->key[*pos].vrChave)              //TROCAR POR STRCOMP/CMP
+           if(*pos < p_page->keycount && strcmp(key.vrChave, p_page->key[*pos].vrChave)==0)              //TROCAR POR STRCOMP/CMP
                    return true;      /* key in in the page */
            else return false;          /* key in not in the page */
 }
@@ -52,10 +52,10 @@ Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
 void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
            int i;
            for(i = p_page->keycount; (strcmp(key.vrChave, p_page->key[i-1].vrChave) < 0) && i > 0; i--){
-                 p_page->key[i] = p_page->key[i-1];
-                 p_page->child[i+1] = p_page->child[i];
+                 memmove(&p_page->key[i], &p_page->key[i-1], sizeof(CHAVE));
+                 memmove(&p_page->child[i+1], &p_page->child[i], sizeof(CHAVE));
            }
            p_page->keycount++;
-           p_page->key[i] = key;
+           memmove(&p_page->key[i], &key, sizeof(CHAVE));
            p_page->child[i+1] = r_child;
 }
