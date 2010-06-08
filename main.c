@@ -61,8 +61,14 @@ int main(int argc, char* argv[]) {
         
        /* verifica quantidade de argumentos */
        if(argc != QTE_ARGUMENTOS) {
-            printf("Erro argumentos\n");
-            system("pause");
+            printf("Linha de comando:\n\n");
+            printf("lab4 <ordem Btree> < arqdados> <arqindice> <Arqdespreza> <Arqdesc>\n\n");
+//            printf("- <Ordem Btree> - Ordem da Btree(3 - 10);\n");
+//Å           printf("- <Arqdados>    - Nome do arquivo de dados;\n");
+//Å           printf("- <Arqindice>   - Nome do arquivo de indices;\n");
+//Å           printf("- <Arqdespreza> - Nome do arquivo com as chaves desprezadas;\n");
+//Å           printf("- <Arqdesc>     - Nome do arquivo com a descricao da estrutura da arvore\n");
+//            printf("                  que permitira reconstrui-la graficamente.\n");
             exit (0);
        }
        
@@ -118,7 +124,7 @@ int main(int argc, char* argv[]) {
                   
                   LiberaRegistro(reg, numcampos);
                   
-                  root = create_root(key, NIL, NIL, ordem); /* cria raiz da Btree */
+                  root = create_root(key, NIL, NIL, ArqIndices); /* cria raiz da Btree */
                   
                   RRN_RegCorrente++;
                   
@@ -132,15 +138,17 @@ int main(int argc, char* argv[]) {
                        strcpy(key.vrChave, reg[0]);
                        
                        /* insere chave */
-                       promoted = insert(root, key, &promo_rrn, &promo_key, ordem, &duplic);
-                       
+                       promoted = insert(root, key, &promo_rrn, &promo_key,
+                                                    ordem, &duplic, ArqIndices);
+
                        /* se j· contÈm a chave na Btree, escreve o registro em ArqDespreza */
                        if(duplic)
                            EscreveRegistro(reg, ArqDespreza, numcampos, head);
                        
                        /* promoÁ„o atÈ o primeiro nÌvel, cria nova raiz */
                        if(promoted)
-                           root = create_root(promo_key, root, promo_rrn, ordem);
+                           root = create_root(promo_key, root, promo_rrn,
+                                                                    ArqIndices);
                        
                        LiberaRegistro(reg, numcampos);
                        
