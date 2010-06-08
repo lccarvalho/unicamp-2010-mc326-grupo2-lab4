@@ -75,6 +75,9 @@ typedef struct {
 void AbreArquivoDados(char* nome, FILE** arqDados, FILE** arqCfg);
 /* Abre o arquivo de dados e seu respectivo arquivo de configuração (.cfg) */
 
+void TiraBrancosDoFinal(char* s);
+/* Elimina todos os brancos em excesso no final de uma string. */
+
 void CarregaHeader(Header** h, int* numcampos, FILE* arqCfg);
 /* Carrega o vetor head com os campos do banco de dados definido por arqCfg */
 
@@ -87,16 +90,16 @@ void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h);
 void LiberaRegistro(Record registro, int n);
 /* Libera todas as strings apontadas por record e também os apontadores */ 
 
-void btread(int rrn, BTPAGE *page_ptr);
+void btread(int rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Lê página de número 'rrn' do arquivo de índices */
 
-void btwrite(int rrn, BTPAGE *page_ptr);
+void btwrite(int rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
-int create_root(CHAVE key, int left, int right, int ordem);
+int create_root(CHAVE key, int left, int right);
 /* Cria a raiz da Btree, inserindo a chave 'key' */
 
-int getpage();
+int getpage(FILE* btfd);
 /* Pega o próximo bloco disponível para uma nova página */
 
 int getroot();
@@ -110,14 +113,14 @@ Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
    e seu filho direito em 'promo_r_child'. Se já tiver uma chave igual no nó,
    seta duplic como true. */
 
-void ins_in_page(char key, int r_child, BTPAGE *p_page);
+void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page);
 /* Insere key e r_child em p_page */
 
 void pageinit(BTPAGE *p_page);
 /* Inicializa uma página, colocando -1 em todos as chaves e NIL nos
    apontadores para os descendentes */
 
-void putroot(int root);
+void putroot(int root, FILE* btfd);
 /* Coloca RRN da raiz no inicio do arquivo de índices */
 
 Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos);
