@@ -96,6 +96,8 @@ Record LeRegistro(FILE* arq, int n, Header* h) {
           registro[i][h[i].tamanho] = '\0';
    }
    
+   fseek(arq, 6, SEEK_CUR);
+   
    return registro;
    
 }/* LeRegistroFixo */
