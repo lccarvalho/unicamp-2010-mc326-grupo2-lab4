@@ -49,7 +49,9 @@ int main(int argc, char* argv[]) {
            numcampos,          /* número de campos de um registro */
            RRN_RegCorrente,    /* RRN do registro no arquivo de dados */
            promo_rrn,          /* RRN promovido */
-           opcao;
+           opcao;              /* opcao escolhida do menu */
+           
+       char leOpcao[10];       /* string para ler a opcao */
        
        Boolean fim = false,      /* flag para loop do menu */
                duplic = false,   /* registro duplicado */
@@ -77,7 +79,6 @@ int main(int argc, char* argv[]) {
        /* a ordem deve ser entre 3 e 10 */
        if(ordem < 3 || ordem > 10){
             printf("Ordem da arvore invalida\n");
-            system("pause");
             exit (0);
        }
 
@@ -99,12 +100,14 @@ int main(int argc, char* argv[]) {
          printf("3. Encerrar\n");
          
          printf("\nOpcao: ");
-         scanf("%d", &opcao);
+         scanf("%s", &leOpcao);
+         opcao = atoi(leOpcao);
          
          /* verifica se é uma opção válida */
-         while(!isdigit(opcao) || opcao < 1 || opcao > 3){
+         while(opcao < 1 || opcao > 3){
              printf("\nOpcao invalida\n\nOpcao: ");
-             scanf("%d", &opcao);
+             scanf("%s", &leOpcao);
+             opcao = atoi(leOpcao);
          }
          
          switch(opcao){
@@ -156,11 +159,12 @@ int main(int argc, char* argv[]) {
                        
                   } /* while */
                   
-                  printf("\nArquivo %s criado\n", argv[3]);
+                  printf("\nArquivo %s criado\n\n", argv[3]);
                   system("pause");
                   
                   fclose(ArqIndices);
                   fclose(ArqDespreza);
+
              break;
              
              case 2:
@@ -168,16 +172,18 @@ int main(int argc, char* argv[]) {
                   
                   //LUCAS
                   
-                  printf("\nArquivo %s criado\n", argv[5]);
+                  printf("\nArquivo %s criado\n\n", argv[5]);
                   system("pause");
                   
                   fclose(ArqDesc);
+
              break;
              
              case 3:
                   fim = true;
              break;
          } /* switch */
+       
        } while (!fim);
 
 
