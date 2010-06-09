@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
          switch(opcao){
              
              case 1:
-                  
+                 
                   ArqIndices = Fopen(argv[3], "w+");
                   ArqDespreza = Fopen(argv[4], "w");
                   
@@ -126,9 +126,9 @@ int main(int argc, char* argv[]) {
                   strcpy(key.vrChave, reg[0]);
                   
                   LiberaRegistro(reg, numcampos);
-                  
+                 
                   root = create_root(key, NIL, NIL, ArqIndices); /* cria raiz da Btree */
-                  
+                   
                   RRN_RegCorrente++;
                   
                   
@@ -139,24 +139,32 @@ int main(int argc, char* argv[]) {
                        /* informações da chave */
                        key.RRNrecord = RRN_RegCorrente;
                        strcpy(key.vrChave, reg[0]);
-                       
+                    
                        /* insere chave */
                        promoted = insert(root, key, &promo_rrn, &promo_key,
                                                     ordem, &duplic, ArqIndices);
+                                                    
+printf("Voltou do insert de %s; promoted=%d\n", key.vrChave, promoted);  
 
                        /* se já contém a chave na Btree, escreve o registro em ArqDespreza */
                        if(duplic)
                            EscreveRegistro(reg, ArqDespreza, numcampos, head);
-                       
+                      
                        /* promoção até o primeiro nível, cria nova raiz */
-                       if(promoted)
+                       if(promoted) {
                            root = create_root(promo_key, root, promo_rrn,
                                                                     ArqIndices);
-                       
+
+printf("Voltou de promoted\n");                   
+                       }
+
+      
                        LiberaRegistro(reg, numcampos);
                        
                        RRN_RegCorrente++;
-                       
+
+printf("Fim while: RRN_RegCorrente=%d\n", RRN_RegCorrente);
+
                   } /* while */
                   
                   printf("\nArquivo %s criado\n\n", argv[3]);
