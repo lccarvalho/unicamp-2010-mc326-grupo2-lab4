@@ -28,42 +28,64 @@
 
 void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
                 int *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd){
-//void split(char key, int r_child, BTPAGE *p_oldpage, char *promo_key,
-//                                 int *promo_r_child, BTPAGE *p_newpage) {
 
       int MAXKEYS = ordem - 1;
       int MINKEYS = MAXKEYS / 2;
       int i;
-      int mid;                     /* tells where split is to occur            */
-      CHAVE workkeys[MAXKEYS+1];   /* temporarily holds keys, before split     */
-      int workch[MAXKEYS+2];       /* temporarily holds children, before split */
+      int mid;                                                                       /* tells where split is to occur            */
+      CHAVE workkeys[MAXKEYS+1];                                                     /* temporarily holds keys, before split     */
+      int workch[MAXKEYS+2];                                                         /* temporarily holds children, before split */
       
-      for(i=0; i < MAXKEYS; i++) {                                     /* move keys and children from*/
-               memmove(&workkeys[i], &p_oldpage->key[i], sizeof(CHAVE)); /*old page into work arrays   */
+      for(i=0; i < MAXKEYS; i++) {                                                   /* move keys and children from*/
+               memmove(&workkeys[i], &p_oldpage->key[i], sizeof(CHAVE));             /*old page into work arrays   */
                workch[i] = p_oldpage->child[i];
       }
       workch[i] = p_oldpage->child[i];
-      for(i = MAXKEYS; strcmp(key.vrChave, workkeys[i-1].vrChave) < 0 && i > 0; i--){ /* insert new key  */
+      for(i = MAXKEYS; strcmp(key.vrChave, workkeys[i-1].vrChave) < 0 && i > 0; i--){/* insert new key  */
                memmove(&workkeys[i], &workkeys[i-1], sizeof(CHAVE));
                workch[i+1] = workch[i];
       }
       memmove(&workkeys[i], &key, sizeof(CHAVE));
+/*
+printf("\nEm split: Chave inserida=%s\nwork:", key.vrChave);
+for(i=0; i < 6; i++) printf("[%d] %6s ", i, &workkeys[i].vrChave);
+printf("\nold:");
+*/
       workch[i+1] = r_child;
       
-      *promo_r_child = getpage(btfd);           /* create new page for split      */
-      pageinit(p_newpage);                  /* and promote rrn of new page    */
+      *promo_r_child = getpage(btfd);                                             /* create new page for split      */
+      pageinit(p_newpage);                                                        /* and promote rrn of new page    */
       
-      for(i=0; i < MINKEYS; i++) {               /* move first half of keys   */
-               memmove(&p_oldpage->key[i], &workkeys[i], sizeof(CHAVE));  /* and children to old page, */
-               p_oldpage->child[i] = workch[i];  /* second half to new page   */
+      for(i=0; i < MINKEYS; i++) {                                                /* move first half of keys   */
+               memmove(&p_oldpage->key[i], &workkeys[i], sizeof(CHAVE));          /* and children to old page, */
+               p_oldpage->child[i] = workch[i];                                   /* second half to new page   */
                memmove(&p_newpage->key[i], &workkeys[i+1+MINKEYS], sizeof(CHAVE));
                p_newpage->child[i] = workch[i+1+MINKEYS];
-               memset (p_oldpage->key[i+MINKEYS].vrChave, NOKEY, TAMCHAVE);      /* mark second half of */
-               p_oldpage->child[i+1+MINKEYS] = NIL;    /* old page as empty   */
+               memset (p_oldpage->key[i+MINKEYS].vrChave, NOKEY, TAMCHAVE);       /* mark second half of */
+               p_oldpage->child[i+1+MINKEYS] = NIL;                               /* old page as empty   */
       }
-      p_oldpage->child[MINKEYS] = workch[MINKEYS];                                                                  //CHECAR
+
+memmove(&p_newpage->key[i], &workkeys[i+1+MINKEYS], sizeof(CHAVE));
+p_newpage->child[i] = workch[i+1+MINKEYS];
+
+
+      p_oldpage->child[MINKEYS] = workch[MINKEYS];
       p_newpage->child[MINKEYS] = workch[i+1+MINKEYS];
       p_newpage->keycount = MAXKEYS - MINKEYS;
       p_oldpage->keycount = MINKEYS;      
-      memmove(promo_key, &workkeys[MINKEYS],sizeof(CHAVE));/* promote middle key   */                                   //CHECAR
-}
+      memmove(promo_key, &workkeys[MINKEYS],sizeof(CHAVE));                       /* promote middle key   */
+
+/*
+for(i=0; i < 6; i++) printf("[%d] %6s ", i, &p_oldpage->key[i].vrChave);
+printf("\nnew:");
+for(i=0; i < 6; i++) printf("[%d] %6s ", i, &p_newpage->key[i].vrChave);
+printf("\n");
+printf("Chave promovida=%s\n", promo_key->vrChave);
+system("pause");
+*/
+
+
+
+
+
+} /* split */

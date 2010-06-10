@@ -130,9 +130,6 @@ int main(int argc, char* argv[]) {
                  
                   root = create_root(key, NIL, NIL, ArqIndices); /* cria raiz da Btree */
 
-//printf("MAIN - Voltou do create_root; root=%d\n\n\n", root);  
-
-                   
                   RRN_RegCorrente++;
                   
                   
@@ -145,10 +142,12 @@ int main(int argc, char* argv[]) {
                        strcpy(key.vrChave, reg[0]);
                     
                        /* insere chave */
+
+printf("Inserindo agora: [%d] %s\n", RRN_RegCorrente, key.vrChave);
+system("pause");
+
                        promoted = insert(root, key, &promo_rrn, &promo_key,
                                                     ordem, &duplic, ArqIndices);
-                                                    
-//printf("MAIN - Voltou do insert de %s; promoted=%d\n", key.vrChave, promoted);  
 
                        /* se já contém a chave na Btree, escreve o registro em ArqDespreza */
                        if(duplic)
@@ -158,17 +157,12 @@ int main(int argc, char* argv[]) {
                        if(promoted) {
                            root = create_root(promo_key, root, promo_rrn,
                                                                     ArqIndices);
-
-//printf("MAIN - Voltou de promoted (raiz foi quebrada)\n");                   
                        }
 
       
                        LiberaRegistro(reg, numcampos);
                        
                        RRN_RegCorrente++;
-
-//printf("MAIN - Fim while: RRN_RegCorrente=%d\n\n\n", RRN_RegCorrente);
-//system("pause");
 
                   } /* while */
                   

@@ -30,42 +30,26 @@ Arguments:
 Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE* promo_key,
                                        int ordem, Boolean *duplic, FILE* btfd){
                                            
-//printf("Entrou em INSERT\n");                                           
-                                           
-//int insert(int rrn, char key, int *promo_r_child, char *promo_key) {
              BTPAGE page,           /* current page                           */
                     newpage;        /* new page created if split occurs       */
              int found, promoted;   /* boolean values                         */
              int pos,
                    p_b_rrn;         /* rrn promoted from below                */
-             CHAVE  p_b_key;         /* key promoted from below                */
+             CHAVE  p_b_key;        /* key promoted from below                */
              
-             if(rrn == NIL) {                               /* past bottom of tree... "promote" */
-             
-//printf("INSERT - Passou da folha e vai promover %d\n", key.RRNrecord);             
-             
-                    memmove(promo_key, &key, sizeof(CHAVE));/* original key so that it will be  */ 
-                    *promo_r_child = NIL;                   /* inserted at leaf level           */
+             if(rrn == NIL) {                                                 /* past bottom of tree... "promote" */
+                    memmove(promo_key, &key, sizeof(CHAVE));                  /* original key so that it will be  */ 
+                    *promo_r_child = NIL;                                     /* inserted at leaf level           */
                     return true;
              }
              
              
              
              btread(rrn, &page, btfd);
-             
-//printf("Leu btpage - keycount=%d\n", page.keycount);
-             
              found = search_node(key, &page, &pos);
-
-
-//printf("Voltou de search_node: pos=%d\n", pos);
-             
              
              if(found) {
                  *duplic = true;
-                 
-//printf("INSERT - Achou registro duplicado\n");                 
-                 
                  return false;
              }
              
@@ -73,31 +57,21 @@ Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE* promo_key,
              promoted = insert(page.child[pos], key, &p_b_rrn, &p_b_key,
                                                            ordem, duplic, btfd);
                                                            
-//printf("INSERT - voltou de insert; keycount=%d, ordem-1=%d\n", page.keycount, ordem-1);                                                            
-//printf("                           promoted=%d\n", promoted); 
-                                                           
              if(!promoted) {
-             
-//printf("INSERT - Not promoted\n");             
-             
                  return false;                                 /* no promotion */
-}
+             }
+             
              if(page.keycount < (ordem-1)) {
                  ins_in_page(p_b_key, p_b_rrn, &page);         /*OK to insert key */
-                 
-//printf("INSERT - Inseriu in page\n");                 
-                 
                  btwrite(rrn, &page, btfd);                    /*and pointer in this page*/             
                  return false;                                 /* no promotion */
              }
+
              else {
                  split(p_b_key, p_b_rrn, &page, promo_key, promo_r_child, 
                                                          &newpage, ordem, btfd); 
-                                                         
-printf("INSERT - Voltou de split\n");                                                         
-                                                         
                  btwrite(rrn, &page, btfd);
                  btwrite(*promo_r_child, &newpage, btfd);
                  return true;                                /* promotion */
              }       
-}
+} /* insert */
