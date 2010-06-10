@@ -134,7 +134,7 @@ void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h){
    
    free(linha);
 
-} /* ImprimeRegFixo */
+} /* EscreveRegistro */
 
 
 void LiberaRegistro(Record registro, int n){
@@ -152,14 +152,18 @@ void putroot(int root, FILE* btfd) {
       fseek(btfd, 0L, SEEK_SET);
       fwrite(&root,1,2,btfd);
       fflush(btfd);      
-}        
+} /* putroot */
+
+
 
 int getpage(FILE* btfd) {
       long  addr;
       fseek(btfd, 0, SEEK_END);
       addr = ftell(btfd) - 2L;
       return ((int) addr / (int) PAGESIZE);
-}
+} /* getpage */
+
+
 
 void btread(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
@@ -167,7 +171,9 @@ void btread(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       fseek(btfd, addr, SEEK_SET);
       fread(page_ptr, 1, PAGESIZE, btfd);
       fflush(stdin);      
-}
+} /* btread */
+
+
 
 void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
@@ -176,4 +182,4 @@ void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       fwrite(page_ptr, 1, PAGESIZE, btfd);
       fflush(btfd);
       return;
-}
+} /* btwrite */

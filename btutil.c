@@ -26,7 +26,9 @@ int create_root(CHAVE key, int left, int right, FILE* btfd) {
            btwrite(rrn, &page, btfd);
            putroot(rrn, btfd);
            return (rrn);
-}
+} /* create_root */
+
+
 
 void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
            int j;
@@ -35,24 +37,26 @@ void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
                  p_page->child[j] = NIL;      
            }
            p_page->child[j] = NIL;      
-}
+           
+} /* pageinit */
+
+
 
 Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
-           for(i=0; (i < p_page->keycount) && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);         //TROCAR POR STRCOMP/CMP
-
-//printf("In search_node: key.vrChave: %s - page->key[%d].vrChave: %s\n", key.vrChave, i-1, p_page->key[i-1].vrChave);
-//printf("                page.keycount:%d\n", p_page->keycount);
-//printf("                resultado da comparacao: %d\n", strcmp(key.vrChave, p_page->key[i].vrChave));
+           for(i=0; (i < p_page->keycount) && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);
 
            *pos = i;
            
-           if(*pos < p_page->keycount && strcmp(key.vrChave, p_page->key[*pos].vrChave)==0)              //TROCAR POR STRCOMP/CMP
-                   return true;      /* key in in the page */
+           if(*pos < p_page->keycount && strcmp(key.vrChave, p_page->key[*pos].vrChave)==0)
+                   return true;        /* key in in the page */
+
            else return false;          /* key in not in the page */
-}
+} /* search_node */
+
+
 
 void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
            int i;
@@ -63,10 +67,10 @@ void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
            p_page->keycount++;
            memmove(&p_page->key[i], &key, sizeof(CHAVE));
            p_page->child[i+1] = r_child;
-           
-printf("Em ins_in_page: Chave %s inserida na pagina de %s\n", key.vrChave, &p_page->key[0].vrChave);
+/*           
+printf("\nEm ins_in_page: Chave inserida=%s\n",key.vrChave);
+for(i=0; i < 6; i++) printf("[%d] %s ", i, &p_page->key[i].vrChave);
+printf("\n");
 system("pause");
-           
-           
-           
-}
+*/           
+} /* ins_in_page */
