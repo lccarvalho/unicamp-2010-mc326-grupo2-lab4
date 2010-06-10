@@ -150,7 +150,7 @@ void LiberaRegistro(Record registro, int n){
 
 void putroot(int root, FILE* btfd) {
       fseek(btfd, 0L, SEEK_SET);
-      fwrite(&root,1,sizeof(int),btfd);
+      fwrite(&root,1,2,btfd);
       fflush(btfd);      
 }        
 
@@ -161,7 +161,7 @@ int getpage(FILE* btfd) {
       return ((int) addr / (int) PAGESIZE);
 }
 
-void btread(int rrn, BTPAGE *page_ptr, FILE* btfd) {
+void btread(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);
@@ -169,7 +169,7 @@ void btread(int rrn, BTPAGE *page_ptr, FILE* btfd) {
       fflush(stdin);      
 }
 
-void btwrite(int rrn, BTPAGE *page_ptr, FILE* btfd) {
+void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd) {
       long addr;
       addr = (long) rrn * (long) PAGESIZE + 2L;
       fseek(btfd, addr, SEEK_SET);

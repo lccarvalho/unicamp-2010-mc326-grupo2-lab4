@@ -21,7 +21,7 @@
 #define tamPrimCampoHd 20
 #define tamUltCampoHd 40
 #define NIL     -1
-#define NOKEY   '@'
+#define NOKEY   -1
 #define MAXORDEM 10
 #define TAMCHAVE 6
 
@@ -90,10 +90,10 @@ void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h);
 void LiberaRegistro(Record registro, int n);
 /* Libera todas as strings apontadas por record e também os apontadores */ 
 
-void btread(int rrn, BTPAGE *page_ptr, FILE* btfd);
+void btread(short rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Lê página de número 'rrn' do arquivo de índices */
 
-void btwrite(int rrn, BTPAGE *page_ptr, FILE* btfd);
+void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
 int create_root(CHAVE key, int left, int right, FILE* btfd);
@@ -105,7 +105,7 @@ int getpage(FILE* btfd);
 int getroot();
 /* Lê RRN da raiz */
 
-Boolean insert(int rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
+Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
                                        int ordem, Boolean *duplic, FILE* btfd);
 /* Função para inserir 'key' na Btree. Usa chamadas recursivas até atingir uma
    folha e então insere. Se o nó estiver cheio, chama split() para dividí-lo.
