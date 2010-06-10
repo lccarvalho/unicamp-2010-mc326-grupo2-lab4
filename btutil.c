@@ -16,7 +16,7 @@
 
 int create_root(CHAVE key, int left, int right, FILE* btfd) {
            BTPAGE page;
-           int rrn;
+           short rrn;
            rrn = getpage(btfd);
            pageinit(&page);
            page.key[0] = key;
@@ -41,7 +41,12 @@ Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
-           for(i=0; i < p_page->keycount && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);         //TROCAR POR STRCOMP/CMP
+           for(i=0; (i < p_page->keycount) && (strcmp(key.vrChave, p_page->key[i].vrChave) > 0); i++);         //TROCAR POR STRCOMP/CMP
+
+//printf("In search_node: key.vrChave: %s - page->key[%d].vrChave: %s\n", key.vrChave, i-1, p_page->key[i-1].vrChave);
+//printf("                page.keycount:%d\n", p_page->keycount);
+//printf("                resultado da comparacao: %d\n", strcmp(key.vrChave, p_page->key[i].vrChave));
+
            *pos = i;
            
            if(*pos < p_page->keycount && strcmp(key.vrChave, p_page->key[*pos].vrChave)==0)              //TROCAR POR STRCOMP/CMP
@@ -53,9 +58,15 @@ void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
            int i;
            for(i = p_page->keycount; (strcmp(key.vrChave, p_page->key[i-1].vrChave) < 0) && i > 0; i--){
                  memmove(&p_page->key[i], &p_page->key[i-1], sizeof(CHAVE));
-                 memmove(&p_page->child[i+1], &p_page->child[i], sizeof(CHAVE));
+                 p_page->child[i+1] = p_page->child[i];
            }
            p_page->keycount++;
            memmove(&p_page->key[i], &key, sizeof(CHAVE));
            p_page->child[i+1] = r_child;
+           
+printf("Em ins_in_page: Chave %s inserida na pagina de %s\n", key.vrChave, &p_page->key[0].vrChave);
+system("pause");
+           
+           
+           
 }

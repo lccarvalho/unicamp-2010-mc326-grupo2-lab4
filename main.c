@@ -28,6 +28,7 @@
 
 
 int main(int argc, char* argv[]) {
+  
        
        /* variáveis ***********************************************************/
        
@@ -44,8 +45,9 @@ int main(int argc, char* argv[]) {
        CHAVE key,           /* chave a ser inserida na Btree */
              promo_key;     /* chave promovida */
        
+       short root;             /* RRN da raiz da Btree */
+
        int ordem,              /* ordem da árvore */
-           root,               /* RRN da raiz da Btree */
            numcampos,          /* número de campos de um registro */
            RRN_RegCorrente,    /* RRN do registro no arquivo de dados */
            promo_rrn,          /* RRN promovido */
@@ -59,7 +61,6 @@ int main(int argc, char* argv[]) {
                
        
        /***********************************************************************/
-        
         
        /* verifica quantidade de argumentos */
        if(argc != QTE_ARGUMENTOS) {
@@ -128,6 +129,9 @@ int main(int argc, char* argv[]) {
                   LiberaRegistro(reg, numcampos);
                  
                   root = create_root(key, NIL, NIL, ArqIndices); /* cria raiz da Btree */
+
+//printf("MAIN - Voltou do create_root; root=%d\n\n\n", root);  
+
                    
                   RRN_RegCorrente++;
                   
@@ -144,7 +148,7 @@ int main(int argc, char* argv[]) {
                        promoted = insert(root, key, &promo_rrn, &promo_key,
                                                     ordem, &duplic, ArqIndices);
                                                     
-printf("Voltou do insert de %s; promoted=%d\n", key.vrChave, promoted);  
+//printf("MAIN - Voltou do insert de %s; promoted=%d\n", key.vrChave, promoted);  
 
                        /* se já contém a chave na Btree, escreve o registro em ArqDespreza */
                        if(duplic)
@@ -155,7 +159,7 @@ printf("Voltou do insert de %s; promoted=%d\n", key.vrChave, promoted);
                            root = create_root(promo_key, root, promo_rrn,
                                                                     ArqIndices);
 
-printf("Voltou de promoted\n");                   
+//printf("MAIN - Voltou de promoted (raiz foi quebrada)\n");                   
                        }
 
       
@@ -163,7 +167,8 @@ printf("Voltou de promoted\n");
                        
                        RRN_RegCorrente++;
 
-printf("Fim while: RRN_RegCorrente=%d\n", RRN_RegCorrente);
+//printf("MAIN - Fim while: RRN_RegCorrente=%d\n\n\n", RRN_RegCorrente);
+//system("pause");
 
                   } /* while */
                   
