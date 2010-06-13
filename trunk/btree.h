@@ -82,7 +82,8 @@ void CarregaHeader(Header** h, int* numcampos, FILE* arqCfg);
 /* Carrega o vetor head com os campos do banco de dados definido por arqCfg */
 
 Record LeRegistro(FILE* arq, int n, Header* h);
-/* Retorna um registro com 'n' campos lido em 'arq'. */
+/* Retorna um registro com 'n' campos lido em 'arq'.
+   Retorna NULL se acabou o arquivo. */
 
 void EscreveRegistro(Record rec, FILE* arq, int numcampos, Header* h);
 /* Grava, na posição corrente em arq, os dados de rec */

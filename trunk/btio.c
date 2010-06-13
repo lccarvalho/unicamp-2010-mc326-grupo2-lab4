@@ -82,7 +82,8 @@ void CarregaHeader(Header** h, int* numcampos, FILE* arqCfg){
 
 
 Record LeRegistro(FILE* arq, int n, Header* h) {
-/* Retorna um registro com 'n' campos lido em 'arq'. */
+/* Retorna um registro com 'n' campos lido em 'arq'.
+   Retorna NULL se acabou o arquivo. */
    
    int i;
    Record registro;
@@ -92,11 +93,18 @@ Record LeRegistro(FILE* arq, int n, Header* h) {
    for(i=0;i<n;i++){
                      
           registro[i] = (char*)Malloc(sizeof(char)*(h[i].tamanho+1));
-          fread(registro[i], h[i].tamanho, 1, arq);
+          if(fread(registro[i], h[i].tamanho, 1, arq) == 0) {   //fim de arquivo
+              free(registro[i]);
+              free(registro);
+              return NULL;
+          }
           registro[i][h[i].tamanho] = '\0';
+          
+          if((i < n-1) && (h[i+1].inicio > h[i].inicio + h[i].tamanho))  //campos com um '' no final
+              fseek(arq, 1, SEEK_CUR);
    }
    
-   fseek(arq, 6, SEEK_CUR);
+   fseek(arq, 2, SEEK_CUR);
    
    return registro;
    
