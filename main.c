@@ -133,32 +133,31 @@ int main(int argc, char* argv[]) {
                   RRN_RegCorrente++;
                   
                   
-                  while(!feof(ArqDados)) {
-                       
-                       reg = LeRegistro(ArqDados, numcampos, head);
+                  while((reg = LeRegistro(ArqDados, numcampos, head)) != NULL) {
                        
                        /* informações da chave */
                        key.RRNrecord = RRN_RegCorrente;
                        strcpy(key.vrChave, reg[0]);
-                    
-                       /* insere chave */
+
 
 printf("Inserindo agora: [%d] %s\n", RRN_RegCorrente, key.vrChave);
-system("pause");
+//system("pause");
 
+                       /* insere chave */
                        promoted = insert(root, key, &promo_rrn, &promo_key,
                                                     ordem, &duplic, ArqIndices);
 
                        /* se já contém a chave na Btree, escreve o registro em ArqDespreza */
-                       if(duplic)
+                       if(duplic) {
                            EscreveRegistro(reg, ArqDespreza, numcampos, head);
+                           duplic = false;
+                       }
                       
                        /* promoção até o primeiro nível, cria nova raiz */
                        if(promoted) {
                            root = create_root(promo_key, root, promo_rrn,
                                                                     ArqIndices);
                        }
-
       
                        LiberaRegistro(reg, numcampos);
                        
@@ -166,11 +165,11 @@ system("pause");
 
                   } /* while */
                   
-                  printf("\nArquivo %s criado\n\n", argv[3]);
-                  system("pause");
-                  
                   fclose(ArqIndices);
                   fclose(ArqDespreza);
+                  
+                  printf("\nArquivo %s criado\n\n", argv[3]);
+                  system("pause");
 
              break;
              
@@ -179,10 +178,10 @@ system("pause");
                   
                   //LUCAS
                   
+                  fclose(ArqDesc);
+                  
                   printf("\nArquivo %s criado\n\n", argv[5]);
                   system("pause");
-                  
-                  fclose(ArqDesc);
 
              break;
              
