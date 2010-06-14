@@ -1,0 +1,1 @@
+lab4 4 dados100.txt dados100.ndx dados100.dsp dados100.dsc

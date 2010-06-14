@@ -27,13 +27,15 @@ Arguments:
           key:                key to be inserted here or lower
           *promo_key:         key promoted up from here to next level
 */
-Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE* promo_key,
+Boolean insert(short rrn, CHAVE key, short *promo_r_child, CHAVE* promo_key,
                                        int ordem, Boolean *duplic, FILE* btfd){
+
+int i;
                                            
              BTPAGE page,           /* current page                           */
                     newpage;        /* new page created if split occurs       */
              int found, promoted;   /* boolean values                         */
-             int pos,
+             short pos,
                    p_b_rrn;         /* rrn promoted from below                */
              CHAVE  p_b_key;        /* key promoted from below                */
              
@@ -60,7 +62,12 @@ Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE* promo_key,
              if(!promoted) {
                  return false;                                 /* no promotion */
              }
-             
+
+printf("\n***Em INSERT - vai fazer insercao em:\n");
+for(i=0; i < page.keycount; i++) printf("[%d] %s ", i, page.key[i].vrChave);
+printf("\nKeyCount: %d\n\n", i);
+//system("pause");
+
              if(page.keycount < (ordem-1)) {
                  ins_in_page(p_b_key, p_b_rrn, &page);         /*OK to insert key */
                  btwrite(rrn, &page, btfd);                    /*and pointer in this page*/             

@@ -156,7 +156,7 @@ void LiberaRegistro(Record registro, int n){
 } /* LiberaRegistro */
 
 
-void putroot(int root, FILE* btfd) {
+void putroot(short root, FILE* btfd) {
       fseek(btfd, 0L, SEEK_SET);
       fwrite(&root,1,2,btfd);
       fflush(btfd);      
@@ -164,7 +164,7 @@ void putroot(int root, FILE* btfd) {
 
 
 
-int getpage(FILE* btfd) {
+short getpage(FILE* btfd) {
       long  addr;
       fseek(btfd, 0, SEEK_END);
       addr = ftell(btfd) - 2L;
