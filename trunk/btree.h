@@ -61,9 +61,9 @@ typedef struct {
 
 /* Estrutura de um nó da Btree */
 typedef struct {
-        int keycount;       /* número de chaves no nó */
+        int keycount;                /* número de chaves no nó */
         CHAVE  key[MAXORDEM-1];      /* chaves */
-        int child[MAXORDEM];      /* RRNs dos descendentes */
+        int child[MAXORDEM];         /* RRNs dos descendentes */
         } BTPAGE;
 
 #define PAGESIZE sizeof(BTPAGE)
@@ -97,16 +97,16 @@ void btread(short rrn, BTPAGE *page_ptr, FILE* btfd);
 void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
-int create_root(CHAVE key, int left, int right, FILE* btfd);
+short create_root(CHAVE key, short left, short right, FILE* btfd);
 /* Cria a raiz da Btree, inserindo a chave 'key' */
 
-int getpage(FILE* btfd);
+short getpage(FILE* btfd);
 /* Pega o próximo bloco disponível para uma nova página */
 
-int getroot();
+//short getroot();
 /* Lê RRN da raiz */
 
-Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
+Boolean insert(short rrn, CHAVE key, short *promo_r_child, CHAVE *promo_key,
                                        int ordem, Boolean *duplic, FILE* btfd);
 /* Função para inserir 'key' na Btree. Usa chamadas recursivas até atingir uma
    folha e então insere. Se o nó estiver cheio, chama split() para dividí-lo.
@@ -114,22 +114,22 @@ Boolean insert(short rrn, CHAVE key, int *promo_r_child, CHAVE *promo_key,
    e seu filho direito em 'promo_r_child'. Se já tiver uma chave igual no nó,
    seta duplic como true. */
 
-void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page);
+void ins_in_page(CHAVE key, short r_child, BTPAGE *p_page);
 /* Insere key e r_child em p_page */
 
 void pageinit(BTPAGE *p_page);
 /* Inicializa uma página, colocando -1 em todos as chaves e NIL nos
    apontadores para os descendentes */
 
-void putroot(int root, FILE* btfd);
+void putroot(short root, FILE* btfd);
 /* Coloca RRN da raiz no inicio do arquivo de índices */
 
-Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos);
+Boolean search_node(CHAVE key, BTPAGE *p_page, short *pos);
 /* Retorna true se key está no nó ou false caso contrário. Em qualquer caso
    coloca a posição correta da chave em pos */
 
-void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
-                int *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd);
+void split(CHAVE key, short r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
+                short *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd);
 /* Divide o nó criando um novo nó e passando metade das chaves para o novo nó.
    Promove a chave do meio e o RRN do novo nó. */                       
 

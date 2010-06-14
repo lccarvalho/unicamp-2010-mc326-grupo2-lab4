@@ -45,12 +45,13 @@ int main(int argc, char* argv[]) {
        CHAVE key,           /* chave a ser inserida na Btree */
              promo_key;     /* chave promovida */
        
-       short root;             /* RRN da raiz da Btree */
-
+       short root,             /* RRN da raiz da Btree */
+             promo_rrn;        /* RRN promovido */
+             
        int ordem,              /* ordem da árvore */
            numcampos,          /* número de campos de um registro */
            RRN_RegCorrente,    /* RRN do registro no arquivo de dados */
-           promo_rrn,          /* RRN promovido */
+           
            opcao;              /* opcao escolhida do menu */
            
        char leOpcao[10];       /* string para ler a opcao */
@@ -140,8 +141,8 @@ int main(int argc, char* argv[]) {
                        strcpy(key.vrChave, reg[0]);
 
 
-printf("Inserindo agora: [%d] %s\n", RRN_RegCorrente, key.vrChave);
-//system("pause");
+printf("\n******************Inserindo agora: [%d] %s*************************\n", RRN_RegCorrente, key.vrChave);
+system("pause");
 
                        /* insere chave */
                        promoted = insert(root, key, &promo_rrn, &promo_key,
@@ -157,6 +158,7 @@ printf("Inserindo agora: [%d] %s\n", RRN_RegCorrente, key.vrChave);
                        if(promoted) {
                            root = create_root(promo_key, root, promo_rrn,
                                                                     ArqIndices);
+printf("\nNOVA RAIZ CRIADA\n");                                                                    
                        }
       
                        LiberaRegistro(reg, numcampos);

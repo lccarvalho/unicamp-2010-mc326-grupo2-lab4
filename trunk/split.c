@@ -26,12 +26,13 @@
 
 #include "btree.h"
 
-void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
-                int *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd){
+void split(CHAVE key, short r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
+                short *promo_r_child, BTPAGE *p_newpage, int ordem, FILE* btfd){
 
       int MAXKEYS = ordem - 1;
       int MINKEYS = MAXKEYS / 2;
       int i;
+int j;
       int mid;                                                                       /* tells where split is to occur            */
       CHAVE workkeys[MAXKEYS+1];                                                     /* temporarily holds keys, before split     */
       int workch[MAXKEYS+2];                                                         /* temporarily holds children, before split */
@@ -46,11 +47,11 @@ void split(CHAVE key, int r_child, BTPAGE *p_oldpage, CHAVE *promo_key,
                workch[i+1] = workch[i];
       }
       memmove(&workkeys[i], &key, sizeof(CHAVE));
-/*
-printf("\nEm split: Chave inserida=%s\nwork:", key.vrChave);
-for(i=0; i < 6; i++) printf("[%d] %6s ", i, &workkeys[i].vrChave);
-printf("\nold:");
-*/
+
+printf("\n***Em SPLIT: Chave inserida=%s\nworkArray:", key.vrChave);
+for(j=0; j < MAXKEYS+1; j++) printf("[%d] %6s ", j, &workkeys[j].vrChave);
+printf("\n\noldpage  :");
+
       workch[i+1] = r_child;
       
       *promo_r_child = getpage(btfd);                                             /* create new page for split      */
@@ -75,14 +76,15 @@ p_newpage->child[i] = workch[i+1+MINKEYS];
       p_oldpage->keycount = MINKEYS;      
       memmove(promo_key, &workkeys[MINKEYS],sizeof(CHAVE));                       /* promote middle key   */
 
-/*
-for(i=0; i < 6; i++) printf("[%d] %6s ", i, &p_oldpage->key[i].vrChave);
-printf("\nnew:");
-for(i=0; i < 6; i++) printf("[%d] %6s ", i, &p_newpage->key[i].vrChave);
-printf("\n");
+
+for(j=0; j < MAXKEYS+1; j++) printf("[%d] %6s ", j, &p_oldpage->key[j].vrChave);
+printf("\nKeyCount: %d\n\n", p_oldpage->keycount);
+printf("newpage  :");
+for(j=0; j < MAXKEYS+1; j++) printf("[%d] %6s ", j, &p_newpage->key[j].vrChave);
+printf("\nKeyCount: %d\n\n", p_newpage->keycount);
 printf("Chave promovida=%s\n", promo_key->vrChave);
-system("pause");
-*/
+//system("pause");
+
 
 
 

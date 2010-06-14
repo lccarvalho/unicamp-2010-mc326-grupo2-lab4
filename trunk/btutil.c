@@ -14,7 +14,7 @@
 #include "btree.h"
 
 
-int create_root(CHAVE key, int left, int right, FILE* btfd) {
+short create_root(CHAVE key, short left, short right, FILE* btfd) {
            BTPAGE page;
            short rrn;
            rrn = getpage(btfd);
@@ -42,7 +42,7 @@ void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
 
 
 
-Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
+Boolean search_node(CHAVE key, BTPAGE *p_page, short *pos) {
                  /* pos: position where key is or should be inserted */
            
            int i;
@@ -58,7 +58,7 @@ Boolean search_node(CHAVE key, BTPAGE *p_page, int *pos) {
 
 
 
-void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
+void ins_in_page(CHAVE key, short r_child, BTPAGE *p_page) {
            int i;
            for(i = p_page->keycount; (strcmp(key.vrChave, p_page->key[i-1].vrChave) < 0) && i > 0; i--){
                  memmove(&p_page->key[i], &p_page->key[i-1], sizeof(CHAVE));
@@ -67,10 +67,12 @@ void ins_in_page(CHAVE key, int r_child, BTPAGE *p_page) {
            p_page->keycount++;
            memmove(&p_page->key[i], &key, sizeof(CHAVE));
            p_page->child[i+1] = r_child;
-/*           
-printf("\nEm ins_in_page: Chave inserida=%s\n",key.vrChave);
-for(i=0; i < 6; i++) printf("[%d] %s ", i, &p_page->key[i].vrChave);
-printf("\n");
-system("pause");
-*/           
+           
+printf("\n***Em ins_in_page: Chave inserida=%s\n",key.vrChave);
+for(i=0; i < p_page->keycount; i++) printf("[%d] %s ", i, &p_page->key[i].vrChave);
+printf("\nKeyCount: %d\n\n", i);
+//printf("Filhos:");
+//for(i=0; i < p_page->keycount+2; i++) printf("[%d] %d ", i, &p_page->child[i]);
+//system("pause");
+           
 } /* ins_in_page */
