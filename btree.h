@@ -124,6 +124,9 @@ void pageinit(BTPAGE *p_page);
 void putroot(short root, FILE* btfd);
 /* Coloca RRN da raiz no inicio do arquivo de índices */
 
+void criar_saida(BTPAGE *no ,FILE* indice, FILE* novo, int nivel, short vno);
+/* Cria o arquivo de saida */
+
 Boolean search_node(CHAVE key, BTPAGE *p_page, short *pos);
 /* Retorna true se key está no nó ou false caso contrário. Em qualquer caso
    coloca a posição correta da chave em pos */

@@ -59,6 +59,7 @@ int main(int argc, char* argv[]) {
        Boolean fim = false,      /* flag para loop do menu */
                duplic = false,   /* registro duplicado */
                promoted;         /* conta se houve promoção de baixo */
+       BTPAGE novo;        
                
        
        /***********************************************************************/
@@ -176,15 +177,20 @@ printf("\nNOVA RAIZ CRIADA\n");
              break;
              
              case 2:
-                  ArqDesc = Fopen(argv[5], "w");
                   
-                  //LUCAS
-                  
-                  fclose(ArqDesc);
-                  
-                  printf("\nArquivo %s criado\n\n", argv[5]);
-                  system("pause");
+                   
+                   
+                  ArqDesc = Fopen(argv[5], "w");  //abre os arquivos
+                  ArqIndices = Fopen(argv[3], "r");
 
+                  short raiz;
+                  fread(&raiz, 1, 2, ArqIndices);  //pega a raiz
+                                  
+                  criar_saida(&novo, ArqIndices, ArqDesc, 1, raiz);   //cria o arquivo de saida
+
+                  fclose(ArqDesc);             //fecha os arquivos
+                  fclose(ArqIndices);
+                  
              break;
              
              case 3:
