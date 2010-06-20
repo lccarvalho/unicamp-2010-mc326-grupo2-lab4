@@ -82,3 +82,38 @@ printf("\nKeyCount: %d\n\n", i);
                  return true;                                /* promotion */
              }       
 } /* insert */
+
+
+void criar_saida(BTPAGE *no ,FILE* indice, FILE* novo, int nivel, short vno){
+   
+   int i,j, filhos[10], chaves;
+   
+   btread(vno, no,indice);  //pega o no
+   chaves = no->keycount;  //pega o numero de chaves
+   
+   for(j=0;j<nivel-1;j++) fprintf(novo, "     ");
+ 
+//escreve os detalhes do no
+   fprintf(novo, "No %d: Total de chaves: %d ", vno, no->keycount);
+        
+//passa por todas as chaves do no e escreve no arquivo        
+   for(i=0;i<chaves;i++){
+          fprintf(novo, "(%d,%s),", no->child[i], no->key[i].vrChave);
+          filhos[i]=no->child[i];
+        
+   }
+   filhos[i]=no->child[i];
+   fprintf(novo,"(%d,)", no->child[i]);
+   fprintf(novo, "\n");
+
+// se existir filhos faz a chamad recursiva, passando por todos os filhos
+   if (filhos[0]>-1){
+   for(i=0;i<chaves+1;i++){
+           btread(filhos[i], no, indice);             
+           criar_saida(no, indice, novo, nivel+1, filhos[i]);   
+   }
+   }                  
+
+
+
+}                  
