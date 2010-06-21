@@ -55,7 +55,7 @@ printf("\n\noldpage  :");
       workch[i+1] = r_child;
       
       *promo_r_child = getpage(btfd);                                             /* create new page for split      */
-      pageinit(p_newpage);                                                        /* and promote rrn of new page    */
+      pageinit(p_newpage, ordem);                                                        /* and promote rrn of new page    */
       
       for(i=0; i < MINKEYS; i++) {                                                /* move first half of keys   */
                memmove(&p_oldpage->key[i], &workkeys[i], sizeof(CHAVE));          /* and children to old page, */

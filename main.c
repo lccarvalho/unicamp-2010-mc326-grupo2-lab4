@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
                   
                   LiberaRegistro(reg, numcampos);
                  
-                  root = create_root(key, NIL, NIL, ArqIndices); /* cria raiz da Btree */
+                  root = create_root(key, NIL, NIL, ArqIndices, ordem); /* cria raiz da Btree */
 
                   RRN_RegCorrente++;
                   
@@ -158,7 +158,7 @@ system("pause");
                        /* promoção até o primeiro nível, cria nova raiz */
                        if(promoted) {
                            root = create_root(promo_key, root, promo_rrn,
-                                                                    ArqIndices);
+                                                             ArqIndices, ordem);
 printf("\nNOVA RAIZ CRIADA\n");                                                                    
                        }
       
@@ -190,6 +190,9 @@ printf("\nNOVA RAIZ CRIADA\n");
 
                   fclose(ArqDesc);             //fecha os arquivos
                   fclose(ArqIndices);
+                  
+                  printf("\nArquivo %s criado\n\n", argv[5]);
+                  system("pause");
                   
              break;
              
