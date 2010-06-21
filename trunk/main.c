@@ -185,7 +185,7 @@ printf("\nNOVA RAIZ CRIADA\n");
 
                   short raiz;
                   fread(&raiz, 1, 2, ArqIndices);  //pega a raiz
-                                  
+
                   criar_saida(&novo, ArqIndices, ArqDesc, 1, raiz);   //cria o arquivo de saida
 
                   fclose(ArqDesc);             //fecha os arquivos

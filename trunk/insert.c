@@ -91,6 +91,7 @@ void criar_saida(BTPAGE *no ,FILE* indice, FILE* novo, int nivel, short vno){
    btread(vno, no,indice);  //pega o no
    chaves = no->keycount;  //pega o numero de chaves
    
+   if (nivel==1) chaves=1;
    
    for(j=0;j<nivel-1;j++) fprintf(novo, "     ");
  
@@ -98,8 +99,7 @@ void criar_saida(BTPAGE *no ,FILE* indice, FILE* novo, int nivel, short vno){
    fprintf(novo, "No %d: Total de chaves: %d ", vno, no->keycount);
         
 //passa por todas as chaves do no e escreve no arquivo        
-   for(i=0;i<chaves;i++){
-          if ('ÿ'==no->key[i].vrChave[0]) break;          
+   for(i=0;i<chaves;i++){         
           fprintf(novo, "(%d,%s),", no->child[i], no->key[i].vrChave);
           filhos[i]=no->child[i];
         
@@ -113,7 +113,6 @@ void criar_saida(BTPAGE *no ,FILE* indice, FILE* novo, int nivel, short vno){
    for(i=0;i<chaves+1;i++){
            btread(filhos[i], no, indice);             
            criar_saida(no, indice, novo, nivel+1, filhos[i]);   
-                           if ('ÿ'==no->key[i].vrChave[0]) break;
    }
    }                  
 
