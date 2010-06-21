@@ -14,11 +14,11 @@
 #include "btree.h"
 
 
-short create_root(CHAVE key, short left, short right, FILE* btfd) {
+short create_root(CHAVE key, short left, short right, FILE* btfd, int ordem) {
            BTPAGE page;
            short rrn;
            rrn = getpage(btfd);
-           pageinit(&page);
+           pageinit(&page, ordem);
            page.key[0] = key;
            page.child[0] = left;
            page.child[1] = right;
@@ -30,9 +30,9 @@ short create_root(CHAVE key, short left, short right, FILE* btfd) {
 
 
 
-void pageinit(BTPAGE *p_page) {        /* p_page: pointer to a page  */
+void pageinit(BTPAGE *p_page, int ordem) {        /* p_page: pointer to a page  */
            int j;
-           for(j = 0; j < MAXORDEM; j++) {
+           for(j = 0; j < ordem; j++) {
                  memset (p_page->key[j].vrChave, NOKEY, TAMCHAVE); 
                  p_page->child[j] = NIL;      
            }

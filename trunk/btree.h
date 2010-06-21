@@ -97,7 +97,7 @@ void btread(short rrn, BTPAGE *page_ptr, FILE* btfd);
 void btwrite(short rrn, BTPAGE *page_ptr, FILE* btfd);
 /* Escreve página de número 'rrn' no arquivo de índices */
 
-short create_root(CHAVE key, short left, short right, FILE* btfd);
+short create_root(CHAVE key, short left, short right, FILE* btfd, int ordem);
 /* Cria a raiz da Btree, inserindo a chave 'key' */
 
 short getpage(FILE* btfd);
@@ -117,7 +117,7 @@ Boolean insert(short rrn, CHAVE key, short *promo_r_child, CHAVE *promo_key,
 void ins_in_page(CHAVE key, short r_child, BTPAGE *p_page);
 /* Insere key e r_child em p_page */
 
-void pageinit(BTPAGE *p_page);
+void pageinit(BTPAGE *p_page, int ordem);
 /* Inicializa uma página, colocando -1 em todos as chaves e NIL nos
    apontadores para os descendentes */
 
