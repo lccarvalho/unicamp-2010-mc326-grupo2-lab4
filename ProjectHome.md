@@ -1,0 +1,1 @@
+C~riação e utilização de arquivo de indices baseado em arvore B
